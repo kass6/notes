@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  nginx:
+    build: images/nginx
+    command: nginx -g "daemon off;"
+    links:
+      - php
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./public:/var/www/html/public
+  php:
+    build: images/php
+    volumes:
+      - ./:/var/www/html
+    command: php-fpm
+    links:
+      - db
+      - redis
+    ports:
+      - "9000:9000"
+    environment:
+      DB_PORT: ${DB_PORT}
+      REDIS_PORT: ${REDIS_PORT}
+  db:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./images/mysql:/var/lib/mysql
+  redis:
+    build: images/redis
+    ports:
+      - "6379:6379"

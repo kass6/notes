@@ -1,0 +1,6 @@
+- use commands\docker_up to start docker
+- use commands\docker_fix_permissions after to fix permissions
+- use commands\docker_composer_install
+- use commands\docker_migrate
+- run npm install
+- run npm run dev
